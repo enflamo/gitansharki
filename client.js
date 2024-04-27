@@ -5,7 +5,7 @@ socket.on('connect', () => {
 });
 
 socket.on('updatePlayers', (players) => {
-    // Mettre à jour l'affichage des joueurs dans la salle
+    displayPlayers(players);
 });
 
 socket.on('startGame', ({ question, targetPlayerId }) => {
@@ -22,6 +22,13 @@ socket.on('updateAnswers', ({ playerId, answer }) => {
 socket.on('updateVotes', ({ voterId, votedPlayerId }) => {
     // Traiter les votes des joueurs
 });
+
+function joinGame() {
+    const playerName = prompt('Entrez votre nom:');
+    if (playerName) {
+        socket.emit('joinGame', playerName);
+    }
+}
 
 function submitAnswer() {
     const answer = document.getElementById('answer').value.trim();
@@ -43,8 +50,20 @@ function displayAnswerInput() {
     document.getElementById('submit-answer-btn').style.display = 'block';
 }
 
+function displayPlayers(players) {
+    const playersList = document.getElementById('players-list');
+    playersList.innerHTML = '';
+    players.forEach(player => {
+        const li = document.createElement('li');
+        li.textContent = player.name;
+        playersList.appendChild(li);
+    });
+    document.getElementById('lobby').style.display = 'block';
+}
+
 function displayPlayerAnswer(playerId, answer) {
     // Ajouter la réponse du joueur à l'interface utilisateur
 }
 
-// Vous pouvez ajouter d'autres fonctionnalités et interactions ici
+// Afficher le lobby lorsque la page est chargée
+window.onload = joinGame;
