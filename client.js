@@ -1,4 +1,5 @@
 const socket = io();
+let playerName = '';
 
 socket.on('connect', () => {
     console.log('Connected to server');
@@ -24,9 +25,11 @@ socket.on('updateVotes', ({ voterId, votedPlayerId }) => {
 });
 
 function joinGame() {
-    const playerName = prompt('Entrez votre nom:');
+    playerName = document.getElementById('playerNameInput').value.trim();
     if (playerName) {
         socket.emit('joinGame', playerName);
+        document.getElementById('lobby').style.display = 'none';
+        document.getElementById('question-container').style.display = 'block';
     }
 }
 
@@ -42,7 +45,6 @@ function submitVote(votedPlayerId) {
 
 function displayQuestion(question) {
     document.getElementById('question').textContent = question;
-    document.getElementById('question-section').style.display = 'block';
 }
 
 function displayAnswerInput() {
@@ -58,12 +60,4 @@ function displayPlayers(players) {
         li.textContent = player.name;
         playersList.appendChild(li);
     });
-    document.getElementById('lobby').style.display = 'block';
 }
-
-function displayPlayerAnswer(playerId, answer) {
-    // Ajouter la réponse du joueur à l'interface utilisateur
-}
-
-// Afficher le lobby lorsque la page est chargée
-window.onload = joinGame;
